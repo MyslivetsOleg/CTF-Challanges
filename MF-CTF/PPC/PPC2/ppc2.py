@@ -14,7 +14,7 @@ def send_data_back(sock: socket, message: str):
 
 
 def read_data_from_socket(sock: socket):
-    return sock.recv(SIZE*4)
+    return sock.recv(SIZE*8)
 
 
 def get_image_from_raw_data(data: bytearray):
@@ -50,9 +50,10 @@ def sanitize_text(message: str, speller: SpellChecker):
         parts[i] = parts[i].replace(".", "")
         parts[i] = parts[i].replace(". ", "")
         parts[i] = parts[i].replace(" .", "")
-    parts[0] = speller.correction(parts[0])
-    parts[1] = speller.correction(parts[1])
-    parts[2] = speller.correction(parts[2])
+        parts[i] = parts[i].replace("\n", "")
+    # parts[0] = speller.correction(parts[0])
+    # parts[1] = speller.correction(parts[1])
+    # parts[2] = speller.correction(parts[2])
     print(parts)
     return parts[0] + "_&_" + parts[1] + "_&_" + parts[2]
 
