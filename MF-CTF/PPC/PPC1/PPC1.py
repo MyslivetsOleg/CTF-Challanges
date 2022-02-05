@@ -1,6 +1,7 @@
 import socket
 import math
 from time import sleep
+import re
 
 
 def parse_data(data):
@@ -25,13 +26,13 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect(('ctf.mf.grsu.by', 9002))
 counter = 0
 flag_found = 0
-while counter <= 51:
+while counter <= 50:
     print("Step: " + str(counter))
     sleep(1)
-    if counter == 51:
+    if counter == 50:
         data = s.recv(1024).decode('utf-8')
         if 'grodno{' in data:
-            print(data)
+            print("[+] flag: " + (re.findall(r"grodno\{.+?\}", data))[0])
             flag_found = 1
             break
     data = s.recv(1024)
