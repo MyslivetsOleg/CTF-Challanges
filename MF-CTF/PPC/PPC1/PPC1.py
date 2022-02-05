@@ -32,7 +32,7 @@ while counter <= 50:
     if counter == 50:
         data = s.recv(1024).decode('utf-8')
         if 'grodno{' in data:
-            print("[+] flag: " + (re.findall(r"grodno\{.+?\}", data))[0])
+            print("[+] flag: " + (re.findall(r"grodno{.+?}", data))[0])
             flag_found = 1
             break
     data = s.recv(1024)
