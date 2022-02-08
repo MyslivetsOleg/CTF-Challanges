@@ -2,12 +2,8 @@ import socket
 import base64
 import io
 from time import sleep
-
-import PIL
-from spellchecker import SpellChecker
 import pytesseract
-from PIL import Image
-
+from PIL import Image, UnidentifiedImageError
 
 def send_data_back(sock: socket, message: str):
     sock.send((message + '\r\n').encode())
@@ -31,7 +27,7 @@ def get_image_from_raw_data(data: bytearray):
     return result
 
 
-def sanitize_text(message: str, speller: SpellChecker):
+def sanitize_text(message: str):
     message.replace("8", "&")
     parts = message.split("&")
     for i in range(0, len(parts)):
@@ -62,7 +58,6 @@ pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 URL = '195.50.2.219'
 PORT = 9007
 SIZE = 1024
-SPELLER = SpellChecker()
 SOCK = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 SOCK.connect((URL, PORT))
 
@@ -82,12 +77,12 @@ try:
         # text = text.replace("_&__", "_&_")
         print(text)
         text = text[:len(text) - 1]
-        text = sanitize_text(text, SPELLER)
+        text = sanitize_text(text)
         print(text)
         send_data_back(SOCK, text)
         sleep(0.2)
         COUNTER -= 1
-except PIL.UnidentifiedImageError as error:
+except UnidentifiedImageError as error:
     print("Exception: " + str(error))
 finally:
     print(read_data_from_socket(SOCK))
