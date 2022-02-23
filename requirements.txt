@@ -1,0 +1,4 @@
+SQLAlchemy~=1.4.31
+preprocessing~=0.1.13
+cryptography~=2.8
+setuptools~=45.2.0

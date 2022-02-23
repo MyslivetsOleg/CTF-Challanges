@@ -21,7 +21,7 @@ def get_image_from_raw_data(data: bytearray):
     data = data.decode('utf-8')
     result = ''
     start = 0
-    end = 0
+    end = len(data)-1
     for i in range(0, len(data) - 1):
         if data[i] == chr(39) and start == 0:
             start = i
