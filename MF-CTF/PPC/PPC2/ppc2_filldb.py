@@ -20,10 +20,10 @@ def main():
     sock.ctf_connect()
 
     img_info = sock.trinity(cfg.mf_ctf["size"]*4)
-    print(img_info[0])
-    print(img_info[1])
+    print("[!] Base64 Image : " + img_info[0])
+    print("[!] Image Text : " + img_info[1])
     if hlp.is_correct_image(img_info[0]) and hlp.is_correct_answer(img_info[1]):
-        img_hash = hashlib.md5(img_info[0].encode('utf-8')).hexdigest()
+        img_hash = hlp.calculate_b64img_hash(img_info[0])
         if not db_image.Image.is_image_exists(session, img_hash):
             session.add(db_image.Image(
                 image_hash=img_hash,

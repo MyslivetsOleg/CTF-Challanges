@@ -1,4 +1,3 @@
-import hashlib
 from time import sleep
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
@@ -19,21 +18,33 @@ def main():
     counter = 250
     try:
         while counter != 0:
-            buffer = sock.read_data_from_socket(8096)
+            buffer = sock.read_data_from_socket(size)
             print(buffer.decode())
-            buffer = hlp.get_image_from_raw_data(buffer)
-            image_md5 = hashlib.md5(buffer.encode('utf-8')).hexdigest()
+            if 'grodno{' in buffer.decode():
+                f = open("flag.txt", "a")
+                f.write(buffer.decode())
+                f.close()
+                break
+            buffer = hlp.get_b64image_from_raw_data(buffer)
+            image_md5 = hlp.calculate_b64img_hash(buffer)
             check = session.query(Image).filter(Image.image_hash == image_md5).first()
-            print(check.image_text)
-            sock.send_data_back(check.image_text)
+            if check is not None:
+                print(check.image_text)
+                sock.send_data_back(check.image_text)
+            else:
+                print("[!] No such image found in DB")
+                raise Exception("[!] No such image found in DB")
             sleep(0.3)
             counter -= 1
     except BaseException as error:
         print("Exception: " + str(error))
     finally:
-        print(sock.read_data_from_socket(8096))
+        # print(sock.read_data_from_socket(size))
         sock.sock.close()
+        exit(1)
 
+
+size = cfg.mf_ctf["size"] * 4
 
 if __name__ == "__main__":
     main()
